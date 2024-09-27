@@ -1,0 +1,143 @@
+﻿@{
+    ViewBag.Title = "Rate the Course";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+    <title>@ViewBag.Title</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .lead {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .rating {
+            display: inline-block;
+        }
+
+        .star {
+            font-size: 2.5rem;
+            color: #ccc;
+            cursor: pointer;
+            transition: color 0.2s ease-in-out;
+        }
+
+            .star.selected {
+                color: #ffcc00;
+            }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+            .btn-primary:hover {
+                background-color: #0056b3;
+            }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-4 {
+            margin-top: 1.5rem;
+        }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+     
+
+
+            // Handle star selection
+            $('.star').on('click', function () {
+                var rating = $(this).data('rating');
+                $('#selectedRating').val(rating);
+
+                // Highlight stars from left to right, including the clicked one
+                $('.star').each(function () {
+                    if ($(this).data('rating') <= rating) {
+                        $(this).addClass('selected');
+                    } else {
+                        $(this).removeClass('selected');
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container text-center">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                @if (string.IsNullOrEmpty(ViewBag.Message))
+                {
+                    <h2>Rate the Course</h2>
+
+                    <!-- Display Course Information -->
+                    <p class="lead">Course: @ViewBag.ctitle</p>
+                    <p>Please rate the course:</p>
+
+                    <!-- Star Rating Form -->
+                    using (Html.BeginForm("SubmitRating", "Student", FormMethod.Post))
+                    {
+
+                        <div class="rating">
+                            <input type="hidden" id="selectedRating" name="rating" value="0" />
+                            <input type="hidden" name="cid" value="@ViewBag.cid" />
+                            <i class="fas fa-star star" data-rating="1"></i>
+                            <i class="fas fa-star star" data-rating="2"></i>
+                            <i class="fas fa-star star" data-rating="3"></i>
+                            <i class="fas fa-star star" data-rating="4"></i>
+                            <i class="fas fa-star star" data-rating="5"></i>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary">Submit Rating</button>
+                        </div>
+
+
+                    }
+                }
+                @if (!string.IsNullOrEmpty(ViewBag.Message))
+                {
+                    <div class="alert alert-success mt-4">
+                        @ViewBag.Message
+                    </div>
+                    <div class="btn-group">
+                        <a href="@Url.Action("CourseCertificate", "Student", new { cid =@ViewBag.cid })" class="btn btn-primary">
+                            See Result
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</body>
+</html>

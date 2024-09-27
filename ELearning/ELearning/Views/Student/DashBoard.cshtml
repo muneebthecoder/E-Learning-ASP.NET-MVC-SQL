@@ -1,0 +1,133 @@
+﻿@{
+    ViewBag.Title = "Student Dashboard";
+    var studentName = ViewBag.StudentName as string; // Assuming student name is passed through ViewBag
+}
+
+<!-- Bootstrap Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm mb-5">
+    <div class="container-fluid">
+        <!-- Brand/Logo -->
+        <a class="navbar-brand" href="#">
+            <i class="fas fa-user-graduate"></i> Student Dashboard
+        </a>
+
+        <!-- Display Student's Name on the Right Side of the Navbar -->
+        <div class="ms-auto me-3">
+            <span class="navbar-text">
+                Welcome, <strong>@Session["sname"]</strong>
+            </span>
+        </div>
+
+        <!-- Navbar Toggle Button (for small screens) -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navbar Links and Logout Button -->
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" href="@Url.Action("EnrollCourse", "Student")">Enroll in a Course</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("ViewEnrolledCourse", "Student")">My Courses</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("CourseResults", "Student")">View Results</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-danger" href="@Url.Action("Logout", "Student")">
+                        Logout <i class="fas fa-sign-out-alt"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container">
+    <br><br><br>
+    <div class="row justify-content-center">
+        <!-- Enroll Course Button -->
+        <div class="col-md-4">
+            <div class="card shadow-sm mb-4 border-0">
+                <div class="card-body text-center">
+                    <div class="icon-container mb-3">
+                        <i class="fas fa-book-reader fa-3x text-primary"></i>
+                    </div>
+                    <h5 class="card-title">Enroll in a New Course</h5>
+                    <p class="card-text text-muted">Enroll in available courses to enhance your skills.</p>
+                    <a href="@Url.Action("EnrollCourse", "Student")" class="btn btn-outline-primary btn-block">Enroll Now</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Show Enrolled Courses Button -->
+        <div class="col-md-4">
+            <div class="card shadow-sm mb-4 border-0">
+                <div class="card-body text-center">
+                    <div class="icon-container mb-3">
+                        <i class="fas fa-list-alt fa-3x text-info"></i>
+                    </div>
+                    <h5 class="card-title">View Enrolled Courses</h5>
+                    <p class="card-text text-muted">Check the list of courses you are currently enrolled in.</p>
+                    <a href="@Url.Action("ViewEnrolledCourse", "Student")" class="btn btn-outline-info btn-block">View Courses</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- View Results Button -->
+        <div class="col-md-4">
+            <div class="card shadow-sm mb-4 border-0">
+                <div class="card-body text-center">
+                    <div class="icon-container mb-3">
+                        <i class="fas fa-chart-line fa-3x text-success"></i>
+                    </div>
+                    <h5 class="card-title">View Your Results</h5>
+                    <p class="card-text text-muted">Check your progress and results for enrolled courses.</p>
+                    <a href="@Url.Action("CourseResults", "Student")" class="btn btn-outline-success btn-block">View Results</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include FontAwesome for Icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
+
+<!-- Include Bootstrap JavaScript for Navbar Functionality -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
+
+<!-- Custom CSS -->
+<style>
+    .icon-container {
+        border-radius: 50%;
+        padding: 15px;
+        background-color: #f8f9fa;
+        display: inline-block;
+    }
+
+    .navbar-nav .nav-link {
+        margin-right: 10px;
+    }
+
+    .btn-outline-danger {
+        border-width: 2px;
+        transition: all 0.3s ease;
+    }
+
+        .btn-outline-danger:hover {
+            background-color: #dc3545;
+            color: white;
+        }
+
+    .ms-auto {
+        margin-left: auto !important;
+    }
+
+    .navbar-text {
+        font-size: 1.1em;
+        font-weight: 500;
+    }
+</style>

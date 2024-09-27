@@ -1,0 +1,96 @@
+﻿@model ELearning.Models.Login
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+      
+     
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Course Details</title>
+            <!-- Bootstrap CSS -->
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+            <style>
+                .header-title {
+                    font-size: 3rem; /* Larger font size for impact */
+                    font-weight: bold; /* Bold text for emphasis */
+                    color: #007bff; /* Blue color */
+                    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+                    margin-bottom: 20px; /* Spacing below the header */
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1 class="text-center header-title">E-Learning</h1>
+            </div>
+
+            <!-- Bootstrap JS and dependencies -->
+            <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        </body>
+
+    <div class="col-md-10 col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-header text-center bg-primary text-white">
+                <h4>Login</h4>
+            </div>
+            <div class="card-body">
+                @using (Html.BeginForm("Login", "LoginSignup", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <!-- Dropdown for user roles -->
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.UserRole, new { @class = "control-label bold-label" })
+                        @Html.DropDownListFor(model => model.UserRole,
+                            new SelectList(new List<SelectListItem>
+                            {
+                                new SelectListItem { Text = "Admin", Value = "Admin" },
+                                new SelectListItem { Text = "Teacher", Value = "Teacher" },
+                                new SelectListItem { Text = "Student", Value = "Student" }
+                            }, "Value", "Text"), "Select Role", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.UserRole, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="row">
+
+                        <!-- Username Field -->
+                        <div class="col-md-12 col-lg-6 mb-3 mb-lg-0">
+                            @Html.LabelFor(model => model.Username, new { @class = "control-label bold-label" })
+                            @Html.TextBoxFor(model => model.Username, new { @class = "form-control", placeholder = "Enter your username" })
+                            @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+                        </div>
+
+                        <!-- Sign Up Link -->
+                        <div class="col-md-12 col-lg-6 d-flex align-items-center justify-content-center">
+                            <div class="text-center">
+                                @Html.Label("If you don't have an account? Sign Up!", new { @style = "font-size: 0.8em; color: #007bff;" })
+                                <br />
+                                <a href="@Url.Action("SignUp", "LoginSignup")" class="btn btn-primary mt-2">Sign Up</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Password Field -->
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Password, new { @class = "control-label bold-label" })
+                        @Html.PasswordFor(model => model.Password, new { @class = "form-control", placeholder = "Enter your password" })
+                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                    </div>
+
+             
+
+
+                    <!-- Login Button -->
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-block">Login</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    </div>
+</div>

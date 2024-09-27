@@ -1,0 +1,224 @@
+﻿@model ELearning.Models.PartialViewCourse
+
+@{
+    ViewBag.Title = "Course Details";
+    var quizUploaded = ViewBag.QuizUploaded as Dictionary<int, bool> ?? new Dictionary<int, bool>();
+    var ReadPdfVideo = ViewBag.ReadPdfVideo as Dictionary<int, bool> ?? new Dictionary<int, bool>();
+    var TotalQuestions = ViewBag.TotalQuestions as Dictionary<int, int> ?? new Dictionary<int, int>();
+    var pdfPaths = ViewBag.PdfPaths as Dictionary<int, List<Tuple<string, string>>> ?? new Dictionary<int, List<Tuple<string, string>>>();
+    var videoPaths = ViewBag.VideoPaths as Dictionary<int, List<Tuple<string, string>>> ?? new Dictionary<int, List<Tuple<string, string>>>();
+    var quizAttemptedAndMarks = ViewBag.QuizAttemptedAndMarks as Dictionary<int, List<string>> ?? new Dictionary<int, List<string>>();
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-color: #f4f7fa;
+            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .course-details-container {
+            padding: 40px 20px;
+            max-width: 1400px;
+            margin: auto;
+        }
+
+        .course-card {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+        }
+
+        .course-image {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .course-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 15px;
+        }
+
+        .course-info {
+            margin-top: 20px;
+        }
+
+            .course-info h5 {
+                font-weight: bold;
+                color: #555;
+            }
+
+            .course-info p {
+                font-size: 1rem;
+                color: #666;
+            }
+
+        .btn-back {
+            margin-top: 30px;
+        }
+
+        .week-card {
+            margin-bottom: 20px;
+        }
+
+        .alert-info {
+            border-color: #d1ecf1;
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .alert-warning {
+            border-color: #ffeeba;
+            background-color: #ffeeba;
+            color: #856404;
+        }
+
+        .rating {
+            color: #ffc107;
+            font-size: 1.2rem;
+            display: flex;
+            gap: 2px;
+        }
+
+            .rating i {
+                text-decoration: none;
+            }
+    </style>
+    <!-- jQuery and AJAX for real-time search -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Debounce function to limit AJAX requests
+            function debounce(func, wait) {
+                let timeout;
+                return function(...args) {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func.apply(this, args), wait);
+                };
+            }
+
+            // Real-time search with debounce
+            const search = debounce(function () {
+                var searchTerm = $('#searchTerm').val();
+                $.ajax({
+                    url: '@Url.Action("SearchWeek", "Student")',
+                    type: 'GET',
+                    data: { searchTerm: searchTerm },
+                    success: function (result) {
+                        $('#courseWeeks').html(result);
+                    },
+                    error: function () {
+                        alert('Error retrieving course weeks.');
+                    }
+                });
+            }, 300);
+
+            $('input[name="weekFilter"]').on('change', function () {
+                var selectedFilter = $('input[name="weekFilter"]:checked').val();
+
+                $('.week-card').each(function () {
+                    var isFavorite = $(this).find('.favorite-btn').hasClass('btn-warning');
+
+                    // Show/hide logic based on selected filter
+                    if (selectedFilter === 'favorites' && !isFavorite) {
+                        $(this).hide(); // Hide non-favorite weeks
+                    } else if (selectedFilter === 'unfavorites' && isFavorite) {
+                        $(this).hide(); // Hide favorite weeks
+                    } else {
+                        $(this).show(); // Show all weeks
+                    }
+                });
+            });
+
+            $('#searchTerm').on('input', search);
+               // Set default search term and trigger search
+            var defaultSearchTerm = ' '; // Assuming you have a property to hold default search term
+            $('#searchTerm').val(defaultSearchTerm);
+            // Trigger search with default value
+            search();
+
+            // Clear the search textbox
+            $('#searchTerm').val('');
+
+            // Re-trigger search with empty value
+            search();
+
+            $('#searchTerm').on('input', search);
+
+
+        });
+    </script>
+</head>
+<body>
+    <div class="container course-details-container">
+        <div class="row justify-content-center">
+            <div class="col-lg-12 col-md-14">
+                <div class="card course-card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <img src="@Model.course.c_image" alt="Course Image" class="course-image">
+                            </div>
+                            <div class="col-md-8">
+                                <h2 class="course-title"><i class="fas fa-book-open"></i> @Model.course.c_title</h2>
+                                <div class="course-info">
+                                    <h5>Description</h5>
+                                    <p>@Model.course.c_description</p>
+                                </div>
+                                <!-- Rating stars -->
+                                <div class="rating">
+                                    @for (int i = 0; i < 5; i++)
+                                    {
+                                        if (i < @Model.course.c_rating)
+                                        {
+                                            <i class="fas fa-star"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="far fa-star"></i>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="d-flex flex-column align-items-center mb-3">
+                        <label for="searchTerm" class="font-weight-bold mb-2">Search Weeks:</label>
+                        <input type="text" id="searchTerm" class="form-control" placeholder="Search weeks..." style="width: 100%; max-width: 500px;">
+                    </div>
+                    <div class="card-header mb-4">
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" id="filterFavorites" name="weekFilter" value="favorites">
+                            <label class="form-check-label" for="filterFavorites">Favorite Weeks</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" id="filterUnfavorites" name="weekFilter" value="unfavorites">
+                            <label class="form-check-label" for="filterUnfavorites">Unfavorite Weeks</label>
+                        </div>
+                    </div>
+                    <!-- Dynamic Course Weeks  -->
+                    <div id="courseWeeks" class="table-responsive">
+                        @Html.Partial("_CourseWeeks", Model)
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

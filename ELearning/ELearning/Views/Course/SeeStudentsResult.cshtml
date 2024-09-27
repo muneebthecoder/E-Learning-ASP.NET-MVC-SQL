@@ -1,0 +1,70 @@
+﻿@model IEnumerable<ELearning.Models.Student>
+
+@{
+    ViewBag.Title = "Student Results";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="text-primary">@ViewBag.ctitle - Week @ViewBag.WeekNo</h2>
+            <p>Total Questions: <strong>@ViewBag.totalquestions</strong></p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-hover table-bordered table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Course Name</th>
+                        <th>Week No</th>
+                        <th>Total Marks</th>
+                        <th>Obtained Marks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var result in Model)
+                    {
+                        <tr>
+                            <td>@result.sname</td>
+                            <td>@ViewBag.ctitle</td> <!-- Assuming course title is in ViewBag -->
+                            <td>@ViewBag.WeekNo</td>
+                            <td>@ViewBag.totalquestions</td> <!-- Assuming total marks come from total questions -->
+                            <td>@result.obtainMarks</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    h2.text-primary {
+        font-size: 1.75rem;
+        font-weight: 600;
+    }
+
+    table {
+        width: 100%;
+        margin-top: 20px;
+        border-collapse: collapse;
+    }
+
+    .table thead th {
+        background-color: #007bff;
+        color: white;
+        font-weight: bold;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .table td, .table th {
+        padding: 12px;
+        text-align: center;
+    }
+</style>

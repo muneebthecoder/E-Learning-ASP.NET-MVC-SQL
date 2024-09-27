@@ -1,0 +1,139 @@
+﻿@model ELearning.Models.SignUpViewModel
+
+@{
+    ViewBag.Title = "SignUp";
+}
+<br>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Details</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .header-title {
+            font-size: 3rem; /* Larger font size for impact */
+            font-weight: bold; /* Bold text for emphasis */
+            color: #007bff; /* Blue color */
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+            margin-bottom: 20px; /* Spacing below the header */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center header-title">E-Learning</h1>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header text-center bg-primary text-white">
+                    <h4>SignUp</h4>
+                </div>
+                <div class="card-body">
+                    @using (Html.BeginForm("SignUp", "LoginSignup", FormMethod.Post, new { id = "signUpForm" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-group">
+                            @Html.Label("Role", new { @class = "control-label bold-label" })
+                            @Html.DropDownList(
+                                "UserRole",  // Name of the form element
+                                new SelectList(new List<SelectListItem>
+                                {
+                                    new SelectListItem { Text = "Teacher", Value = "Teacher" },
+                                    new SelectListItem { Text = "Student", Value = "Student" }
+                                }, "Value", "Text"),
+                                "Select Role",
+                                new { @class = "form-control", id = "roleDropdown" }
+                            )
+                        </div>
+
+                        <div id="dynamicContent">
+                            <!-- Dynamic content will be loaded here based on role -->
+                        </div>
+                        @*
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary btn-block">SignUp</button>
+                            </div>*@
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#roleDropdown').change(function () {
+                var selectedRole = $(this).val();
+                var dynamicContent = $('#dynamicContent');
+
+                if (selectedRole === "Student") {
+                    // Load Student form fields
+                    dynamicContent.html(`
+                                <h3>Student Form</h3>
+                                <div class="form-group">
+                                    <label for="sname">Student Name</label>
+                                    <input type="text" name="sname" id="sname" class="form-control" />
+                                </div>
+                                <div class="form-group">
+        <label for="semail">Email</label>
+        <input type="text" name="semail" id="semail" class="form-control" />
+</div>
+
+                                <div class="form-group">
+        <label for="spassword">Password</label>
+        <input type="text" name="spassword" id="spassword" class="form-control" />
+</div>
+        <div class="form-group">
+        <label for="sInterset">Interset</label>
+        <input type="text" name="sInterset" id="sInterset" class="form-control" />
+</div>
+        <div class="form-group">
+        <button type="submit" class="btn btn-primary btn-block">SignUp</button>
+</div>
+                                <!-- Add additional student-specific fields here -->
+                            `);
+                } else if (selectedRole === "Teacher") {
+                    // Load Teacher form fields
+                    dynamicContent.html(`
+                                <h3>Teacher Form</h3>
+                                                           <div class="form-group">
+                                    <label for="tname">Teacher Name</label>
+                                    <input type="text" name="tname" id="tname" class="form-control" />
+                                </div>
+                                <div class="form-group">
+        <label for="temail">Email</label>
+        <input type="text" name="temail" id="temail" class="form-control" />
+</div>
+
+                                <div class="form-group">
+        <label for="tpassword">Password</label>
+        <input type="text" name="tpassword" id="tpassword" class="form-control" />
+</div>
+        <div class="form-group">
+        <label for="tqualification">Qualification</label>
+        <input type="text" name="tqualification" id="tqualification" class="form-control" />
+</div>
+        <div class="form-group">
+        <button type="submit" class="btn btn-primary btn-block">SignUp</button>
+</div>
+                                <!-- Add additional teacher-specific fields here -->
+                            `);
+                } else {
+                    dynamicContent.empty();
+                }
+            });
+        });
+    </script>
+}

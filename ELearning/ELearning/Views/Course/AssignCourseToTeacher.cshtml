@@ -1,0 +1,44 @@
+﻿@model ELearning.Models.AllocateCourse
+
+@{
+    ViewBag.Title = "Allocate Course to Teacher";
+
+    var tlist = TempData["tlist"] as List<SelectListItem> ?? new List<SelectListItem>();
+    var clist = TempData["clist"] as List<SelectListItem> ?? new List<SelectListItem>();
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4">Allocate Course to Teacher</h2>
+
+    @using (Html.BeginForm("AssignCourseToTeacher", "Course", FormMethod.Post, new { @class = "form" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="row">
+            <!-- Teacher Selection -->
+            <div class="col-md-12 col-lg-6 mb-3">
+                @Html.Label("Teacher", new { @class = "form-label" })
+                @Html.DropDownListFor(model => model.TeacherId, tlist, "Select Teacher", new { @class = "form-select" })
+                @Html.ValidationMessageFor(model => model.TeacherId, "", new { @class = "text-danger" })
+            </div>
+
+            <!-- Course Selection -->
+            <div class="col-md-12 col-lg-6 mb-3">
+                @Html.Label("Course", new { @class = "form-label" })
+                @Html.DropDownListFor(model => model.CourseId, clist, "Select Course", new { @class = "form-select" })
+                @Html.ValidationMessageFor(model => model.CourseId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary btn-lg">Allocate Course</button>
+        </div>
+    }
+</div>
+
+<!-- Bootstrap CSS -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Bootstrap Icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">

@@ -1,0 +1,52 @@
+﻿@model List<ELearning.Models.Teacher>
+
+@{
+    ViewBag.Title = "Teacher List";
+}
+
+<div class="container mt-5">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2 class="text-center mb-4">Teacher List</h2>
+            <!-- Optionally, you can add a button to add a new teacher -->
+            @*<div class="text-end mb-3">
+                <a href="@Url.Action("AddTeacher", "Admin")" class="btn btn-primary">Add New Teacher</a>
+            </div>*@
+            <!-- Table to display the list of teachers -->
+            <table class="table table-bordered table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Teacher Name</th>
+                        <th>Email</th>
+                        <th>Qualification</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        foreach (var teacher in Model)
+                        {
+                            <tr>
+                                <td>@teacher.tname</td>
+                                <td>@teacher.temail</td>
+                                <td>@teacher.tqualification</td>
+                                <td>
+                                    <!-- Action buttons for edit and delete -->
+                                    <a href="@Url.Action("EditTeacher", "Admin", new { id = teacher.tid })" class="btn btn-sm btn-warning me-2">Edit</a>
+                                    <a href="@Url.Action("DeleteTeacher", "Admin", new { id = teacher.tid })" class="btn btn-sm btn-danger">Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center">No teachers found.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

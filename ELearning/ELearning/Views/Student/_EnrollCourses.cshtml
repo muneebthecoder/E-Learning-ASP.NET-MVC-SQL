@@ -1,0 +1,35 @@
+﻿@model List<ELearning.Models.Course>
+<div class="row">
+    @if (Model.Any())
+    {
+        foreach (var course in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="course-card">
+                    <img src="@course.c_image" alt="@course.c_title" class="course-image">
+                    <h4 class="course-title">@course.c_title</h4>
+                    <p><strong>Teacher:</strong> @course.teacher_name</p>
+                    <p class="course-description">@course.c_description</p>
+                    <!-- Star Rating -->
+                    <div class="rating">
+                        @for (int i = 0; i < 5; i++)
+                        {
+                            <i class="fas fa-star @((i < course.c_rating) ? "text-warning" : "text-muted")"></i>
+                        }
+                    </div>
+                    <!-- Enroll Button -->
+                    <div class="btn-group">
+                        <a href="@Url.Action("EnrolledCourse", "Student", new { cid = course.cid, teacherId = course.teacher_id ,title =course.c_title })" class="btn btn-success">
+                            Enroll Now <i class="fas fa-check"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p class="text-center">No courses available.</p>
+    }
+</div>
+

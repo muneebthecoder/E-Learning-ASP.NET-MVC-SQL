@@ -1,0 +1,144 @@
+﻿@model List<ELearning.Models.Course>
+@{
+    ViewBag.Title = "My Enrolled Courses";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            padding: 30px;
+        }
+
+        .course-card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+            .course-card:hover {
+                transform: scale(1.03);
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            }
+
+        .course-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .course-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #333;
+            margin-top: 15px;
+        }
+
+        .course-description {
+            font-size: 0.95rem;
+            color: #6c757d;
+            margin-top: 10px;
+        }
+
+        .rating {
+            font-size: 1.1rem;
+            color: #ffc107;
+            margin-top: 10px;
+        }
+
+            .rating i {
+                margin-right: 3px;
+            }
+
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+            .btn-group a {
+                font-size: 0.9rem;
+                font-weight: bold;
+            }
+
+        .status-badge {
+            font-size: 0.9rem;
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: #fff;
+        }
+
+        .status-completed {
+            background-color: #28a745;
+        }
+
+        .status-in-progress {
+            background-color: #ffc107;
+            color: #212529;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #6c757d;
+            font-size: 1.1rem;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mb-4 text-center">@ViewBag.Title</h1>
+
+        <div class="row">
+            @if (Model.Any())
+            {
+                foreach (var course in Model)
+                {
+                    <div class="col-md-4 mb-4">
+                        <div class="course-card">
+                            <img src="@course.c_image" alt="@course.c_title" class="course-image">
+                            <h4 class="course-title">@course.c_title</h4>
+                            <p><strong>Teacher:</strong> @course.teacher_name</p>
+                            <p class="course-description">@course.c_description</p>
+                            <div class="rating">
+                                @for (int i = 0; i < 5; i++)
+                                {
+                                    <i class="fas fa-star @((i < course.c_rating) ? "text-warning" : "text-muted")"></i>
+                                }
+                                <strong class="text-black">Progress: @course.progress% </strong>
+                            </div>
+                            <div class="btn-group">
+                                <a href="@Url.Action("CourseDetailsStudent", "Student", new { id = course.cid })" class="btn btn-primary">
+                                    View Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="empty-message">You are not enrolled in any courses.</p>
+            }
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+</body>
+</html>

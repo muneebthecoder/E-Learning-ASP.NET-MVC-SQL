@@ -1,0 +1,50 @@
+﻿@model List<ELearning.Models.Course>
+
+@{
+    ViewBag.Title = "Course List";
+}
+
+<div class="container mt-5">
+    <!-- Header with Search Bar -->
+    <div class="d-flex justify-content-between mb-4 align-items-center">
+        <h2 class="mb-0">Course List</h2>
+        <div class="d-flex align-items-center">
+            <input type="text" id="searchTerm" class="form-control me-2" placeholder="Search" />
+            <a href="@Url.Action("AddCousre", "Course")" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Add New Course
+            </a>
+        </div>
+    </div>
+
+    <!-- Dynamic Course List Table -->
+    <div id="courseList" class="table-responsive">
+        @Html.Partial("_CourseTable", Model)
+    </div>
+</div>
+
+<!-- jQuery and AJAX for real-time search -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#searchTerm').on('input', function () {
+            var searchTerm = $(this).val();
+
+            $.ajax({
+                url: '@Url.Action("SearchCourses", "Course")',
+                type: 'GET',
+                data: { searchTerm: searchTerm },
+                success: function (result) {
+                    $('#courseList').html(result);
+                },
+                error: function () {
+                    alert('Error retrieving courses.');
+                }
+            });
+        });
+    });
+</script>
+
+<!-- Bootstrap CSS -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap Icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">

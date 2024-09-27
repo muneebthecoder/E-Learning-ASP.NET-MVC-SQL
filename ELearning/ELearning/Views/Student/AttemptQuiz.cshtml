@@ -1,0 +1,185 @@
+﻿@model ELearning.Models.QuizViewModel
+
+@{
+    ViewBag.Title = "Attempt Quiz";
+    var totalTimeInMinutes = Model.Questions.FirstOrDefault()?.quizTime ?? 0; // Get QuizTime from the first question
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-color: #f4f7fa;
+            color: #495057;
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+        }
+
+        .quiz-container {
+            padding: 40px 20px;
+            max-width: 900px;
+            margin: auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #0056b3;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .timer {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #dc3545;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .question {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 5px solid #0056b3;
+        }
+
+        .form-check-input {
+            appearance: none;
+            width: 1.5rem;
+            height: 1.5rem;
+            border: 2px solid #0056b3;
+            border-radius: 50%;
+        }
+
+            .form-check-input:checked {
+                background-color: #0056b3;
+            }
+
+        .form-check-label {
+            font-size: 1.1rem;
+            margin-left: 10px;
+        }
+
+        .btn-submit {
+            margin-top: 40px;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            background-color: #0056b3;
+            border: none;
+            color: white;
+            border-radius: 8px;
+        }
+
+            .btn-submit:hover {
+                background-color: #0046a2;
+            }
+    </style>
+    <script>
+        var quizStartTime; // Variable to store the time when the quiz starts
+
+        // Function to start the countdown timer
+        function startTimer(duration, display) {
+            var timer = duration, minutes, seconds;
+            var interval = setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent = minutes + ":" + seconds;
+
+                if (--timer < 0) {
+                    clearInterval(interval);
+                    document.getElementById("quizForm").submit(); // Automatically submit form when timer ends
+                }
+            }, 1000);
+        }
+
+        // Initialize timer when the page loads
+        window.onload = function () {
+            quizStartTime = new Date(); // Capture the time when the quiz starts
+
+            var quizTimeInMinutes = @totalTimeInMinutes;
+            if (quizTimeInMinutes > 0) {
+                var quizTimeInSeconds = quizTimeInMinutes * 60; // Convert minutes to seconds
+                var display = document.querySelector('#timer');
+                startTimer(quizTimeInSeconds, display);
+            } else {
+                // Hide the timer if quizTime is zero
+                document.querySelector('.timer').style.display = 'none';
+            }
+        };
+        function captureElapsedTime() {
+            var quizEndTime = new Date(); // Capture the end time
+            var timeSpent = quizEndTime - quizStartTime; // Calculate the time spent in milliseconds
+
+            // Convert time spent to minutes and seconds
+            var minutes = Math.floor(timeSpent / 1000 / 60);
+            var seconds = Math.floor((timeSpent / 1000) % 60);
+
+            // Format time as mm:ss
+            var elapsedTime = (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+
+            // Assign the formatted elapsed time to the hidden input field
+            document.getElementById('elapsedTime').value = elapsedTime;
+        }
+    </script>
+</head>
+<body>
+    <div class="container quiz-container">
+        <h2>@ViewBag.ctitle - Week @Model.WeekNo</h2>
+
+        <!-- Timer Display -->
+        <div class="timer">Time Remaining: <span id="timer"></span></div>
+
+        @using (Html.BeginForm("SubmitQuiz", "Student", FormMethod.Post, new { id = "quizForm", onsubmit = "captureElapsedTime()" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("cid", Model.CourseId)
+            @Html.Hidden("weekNo", Model.WeekNo)
+            @Html.Hidden("elapsedTime", "", new { id = "elapsedTime" })
+
+            for (int i = 0; i < Model.Questions.Count; i++)
+            {
+                var question = Model.Questions[i];
+                <div class="question">
+                    <h4>@question.Question</h4>
+                    <div class="form-check">
+                        <input type="hidden" name="answers[@i].Id" value="@question.Id" />
+                        <input type="radio" class="form-check-input" name="answers[@i].SelectedOption" value="@question.Option1" id="option1_@question.Id" />
+                        <label class="form-check-label" for="option1_@question.Id">@question.Option1</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" name="answers[@i].SelectedOption" value="@question.Option2" id="option2_@question.Id" />
+                        <label class="form-check-label" for="option2_@question.Id">@question.Option2</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" name="answers[@i].SelectedOption" value="@question.Option3" id="option3_@question.Id" />
+                        <label class="form-check-label" for="option3_@question.Id">@question.Option3</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" name="answers[@i].SelectedOption" value="@question.Option4" id="option4_@question.Id" />
+                        <label class="form-check-label" for="option4_@question.Id">@question.Option4</label>
+                    </div>
+                </div>
+            }
+
+            <button type="submit" class="btn btn-submit">Submit Answers</button>
+        }
+    </div>
+</body>
+</html>

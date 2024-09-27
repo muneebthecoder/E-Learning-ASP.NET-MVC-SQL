@@ -1,0 +1,222 @@
+﻿
+@model ELearning.Models.PartialViewCourse
+
+@{
+    ViewBag.Title = "Course Details";
+    var quizUploaded = ViewBag.QuizUploaded as Dictionary<int, bool> ?? new Dictionary<int, bool>();
+    var ReadPdfVideo = ViewBag.ReadPdfVideo as Dictionary<int, bool> ?? new Dictionary<int, bool>();
+    var TotalQuestions = ViewBag.TotalQuestions as Dictionary<int, int> ?? new Dictionary<int, int>();
+    var pdfPaths = ViewBag.PdfPaths as Dictionary<int, List<Tuple<int, string, string>>> ?? new Dictionary<int, List<Tuple<int, string, string>>>();
+    var videoPaths = ViewBag.VideoPaths as Dictionary<int, List<Tuple<int, string, string>>> ?? new Dictionary<int, List<Tuple<int, string, string>>>();
+    var quizAttemptedAndMarks = ViewBag.QuizAttemptedAndMarks as Dictionary<int, List<string>> ?? new Dictionary<int, List<string>>();
+
+}
+
+
+@for (int ii = 0; ii <= ViewBag.loop; ii++)
+{
+    <div class="col-md-8 week-card mb-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0 ">Week @(pdfPaths[ii].First().Item1 <= 0 ? videoPaths[ii].First().Item1 : pdfPaths[ii].First().Item1)   @if (quizAttemptedAndMarks.ContainsKey(ii) && quizAttemptedAndMarks[ii].Count > 0)
+                {<i class="fas fa-check"></i>}</h4>
+            </div>
+            <div class="card-body">
+
+                <!-- Favorite Button -->
+                <button class="btn @(ViewBag.FavoriteWeeks.Contains((pdfPaths[ii].First().Item1 <= 0 ? videoPaths[ii].First().Item1 : pdfPaths[ii].First().Item1)) ? "btn-warning" : "btn-outline-secondary") favorite-btn float-right"
+                        data-week="@(pdfPaths[ii].First().Item1 <= 0 ? videoPaths[ii].First().Item1 : pdfPaths[ii].First().Item1)"
+                        data-cid="@Model.course.cid">
+                    <i class="fa @(ViewBag.FavoriteWeeks.Contains((pdfPaths[ii].First().Item1 <= 0 ? videoPaths[ii].First().Item1 : pdfPaths[ii].First().Item1)) ? "fa-star" : "fa-star-o")"></i>
+                    @(ViewBag.FavoriteWeeks.Contains((pdfPaths[ii].First().Item1 <= 0 ? videoPaths[ii].First().Item1 : pdfPaths[ii].First().Item1)) ? "Unfavorite" : "Favorite")
+                </button>
+                <br><br>
+                <!-- PDF Section -->
+                <div class="card mb-3">
+                    <div class="card-header bg-light"><strong>PDFs</strong></div>
+                    <div class="card-body">
+                        @if (pdfPaths.ContainsKey(ii) && pdfPaths[ii].Count > 0)
+                        {
+                            <div class="alert alert-info">
+                                PDFs for Week @(pdfPaths[ii].First().Item1 <= 0 ? videoPaths[ii].First().Item1 : pdfPaths[ii].First().Item1):
+                                <ul class="list-group">
+                                    @foreach (var pdfPath in pdfPaths[ii])
+                                    {
+                                        <li class="list-group-item"><i class="fa fa-file-pdf-o text-danger"></i> <a href="@pdfPath.Item2" target="_blank" class="pdf-link" data-cid="@Model.course.cid" data-week="@(pdfPaths[ii].First().Item1 <= 0 ? videoPaths[ii].First().Item1 : pdfPaths[ii].First().Item1)">@pdfPath.Item3</a></li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-warning">
+                                No PDFs uploaded for Week @(pdfPaths[ii].First().Item1 <= 0 ? videoPaths[ii].First().Item1 : pdfPaths[ii].First().Item1).
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Quiz Section -->
+                <div class="card mb-3">
+                    <div class="card-header bg-light"><strong>Quiz</strong></div>
+                    <div class="card-body">
+                        @if (quizUploaded.ContainsKey(ii) && quizUploaded[ii])
+                        {
+                            <div class="alert alert-info">
+                                Quiz available for Week @(pdfPaths[ii].First().Item1 <= 0 ? videoPaths[ii].First().Item1 : pdfPaths[ii].First().Item1).
+                                <br>
+                                @if (quizAttemptedAndMarks.ContainsKey(ii) && quizAttemptedAndMarks[ii].Count > 0)
+                                {
+                                    if ((((double)int.Parse(quizAttemptedAndMarks[ii][0]) / @TotalQuestions[ii]) * 100) < 50.0)
+                                    {
+                                        //      <a href="@Url.Action("ReAttemptQuiz", "Student", new { cid = Model.course.cid, weekNo = (pdfPaths[ii].First().Item1 <= 0 ? videoPaths[ii].First().Item1 : pdfPaths[ii].First().Item1) })" class="btn btn-danger mt-2">Re-Attempt Quiz</a><p></p>
+                                    }
+                                    <strong>Total Questions: @TotalQuestions[ii]</strong>
+                                    <br />
+                                    <strong>Score: @quizAttemptedAndMarks[ii][0]</strong>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("AttemptQuiz", "Student", new { cid = Model.course.cid, weekNo = (pdfPaths[ii].First().Item1 <= 0 ? videoPaths[ii].First().Item1 : pdfPaths[ii].First().Item1) })" class="btn btn-success mt-2"
+                                       style="pointer-events: @(ReadPdfVideo.ContainsKey(ii) && ReadPdfVideo[ii] ? "auto" : "none");
+                                                     opacity: @(ReadPdfVideo.ContainsKey(ii) && ReadPdfVideo[ii] ? "1" : "0.6");
+                                                     cursor: @(ReadPdfVideo.ContainsKey(ii) && ReadPdfVideo[ii] ? "pointer" : "default");">Attempt Quiz</a>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-warning">
+                                No Quiz uploaded for Week @(pdfPaths[ii].First().Item1 <= 0 ? videoPaths[ii].First().Item1 : pdfPaths[ii].First().Item1).
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Videos Section -->
+                <div class="card mb-3">
+                    <div class="card-header bg-light"><strong>Videos</strong></div>
+                    <div class="card-body">
+                        @if (videoPaths.ContainsKey(ii) && videoPaths[ii].Count > 0)
+                        {
+                            <div class="alert alert-info">
+                                Videos for Week @(pdfPaths[ii].First().Item1 <= 0 ? videoPaths[ii].First().Item1 : pdfPaths[ii].First().Item1):
+                                <ul class="list-group">
+                                    @foreach (var videoPath in videoPaths[ii])
+                                    {
+                                        <li class="list-group-item"><i class="fa fa-play-circle text-primary"></i> <a href="@videoPath.Item2" target="_blank" class="video-link" data-cid="@Model.course.cid" data-week="@(pdfPaths[ii].First().Item1 <= 0 ? videoPaths[ii].First().Item1 : pdfPaths[ii].First().Item1)">@videoPath.Item3</a></li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-warning">
+                                No Videos uploaded for Week @(pdfPaths[ii].First().Item1 <= 0 ? videoPaths[ii].First().Item1 : pdfPaths[ii].First().Item1).
+                            </div>
+                        }
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+@if (ViewBag.loop==-1)
+{
+    <div class="alert alert-warning">
+        <center>      <strong>     No Weeks and Content upload by teacher .</strong></center>
+    </div>
+}
+
+
+
+<!-- LooKed Weeks -->
+<!--@if (ViewBag.loop <= 14)
+{
+    <div class="alert alert-warning">
+  <center>      <strong>     Furthers Weeks is looked to unlocked please attempt quizzes of previous Weeks .</strong></center>
+    </div>
+}-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></script>
+<script>
+        $(document).ready(function () {
+            // Debounce function to limit AJAX requests
+            function debounce(func, wait) {
+                let timeout;
+                return function(...args) {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func.apply(this, args), wait);
+                };
+            }
+
+            // Log PDF clicks and open in new tab
+            $('.pdf-link').on('click', function (event) {
+                event.preventDefault();
+                var pdfUrl = $(this).attr('href');
+                var courseId = $(this).data('cid');
+                var weekNo = $(this).data('week');
+                $.ajax({
+                    url: '@Url.Action("SavePdfClick", "Student")',
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify({ pdfUrl: pdfUrl, cid: courseId, weekNo: weekNo }),
+                    success: function () {
+                        window.open(pdfUrl, '_blank');
+                    },
+                    error: function (xhr, status, error) {
+                        console.log('Error logging PDF click:', error);
+                    }
+                });
+            });
+
+            // Log video clicks and open in new tab
+            $('.video-link').on('click', function (event) {
+                event.preventDefault();
+                var videoUrl = $(this).attr('href');
+                var courseId = $(this).data('cid');
+                var weekNo = $(this).data('week');
+                $.ajax({
+                    url: '@Url.Action("SaveVideoClick", "Student")',
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify({ videoUrl: videoUrl, cid: courseId, weekNo: weekNo }),
+                    success: function () {
+                        window.open(videoUrl, '_blank');
+                    },
+                    error: function (xhr, status, error) {
+                        console.log('Error logging video click:', error);
+                    }
+                });
+            });
+
+
+              // Handle Favorite button click
+        $('.favorite-btn').on('click', function () {
+            var weekNo = $(this).data('week');
+            var courseId = $(this).data('cid');
+            var $button = $(this);
+
+            $.ajax({
+                url: '@Url.Action("ToggleFavoriteWeek", "Student")',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({ weekNo: weekNo, cid: courseId }),
+                success: function (response) {
+                    if (response.isFavorite) {
+                        // Change button to 'Unfavorite'
+                        $button.removeClass('btn-secondary').addClass('btn-warning').text('Unfavorite');
+                    } else {
+                        // Change button to 'Favorite'
+                        $button.removeClass('btn-warning').addClass('btn-secondary').text('Favorite');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log('Error updating favorite status:', error);
+                }
+            });
+        });
+        });
+</script>

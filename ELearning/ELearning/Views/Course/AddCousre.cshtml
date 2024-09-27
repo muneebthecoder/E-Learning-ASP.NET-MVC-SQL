@@ -1,0 +1,90 @@
+﻿@model ELearning.Models.Course
+
+@{
+    ViewBag.Title = "Create Course";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4">Add New Course</h2>
+
+    @using (Html.BeginForm("AddCousre", "Course", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="row">
+            <!-- Course Title -->
+            <div class="form-group col-md-12 col-lg-6">
+                @Html.LabelFor(model => model.c_title, new { @class = "form-label" })
+                @Html.TextBoxFor(model => model.c_title, new { @class = "form-control", placeholder = "Enter course title" })
+                @Html.ValidationMessageFor(model => model.c_title, "", new { @class = "text-danger" })
+            </div>
+
+            <!-- Course Category -->
+            <div class="form-group col-md-12 col-lg-6">
+                @Html.LabelFor(model => model.c_category, new { @class = "form-label" })
+                @Html.DropDownListFor(model => model.c_category,
+                    new SelectList(new List<SelectListItem>
+                    {
+                        new SelectListItem { Text = "Web", Value = "Web" },
+                        new SelectListItem { Text = "App", Value = "App" }
+                    }, "Value", "Text"), "Select Category", new { @class = "form-select" })
+                @Html.ValidationMessageFor(model => model.c_category, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Course Description -->
+            <div class="form-group col-md-12 col-lg-6">
+                @Html.LabelFor(model => model.c_description, new { @class = "form-label" })
+                @Html.TextAreaFor(model => model.c_description, new { @class = "form-control", placeholder = "Enter course description", rows = 4 })
+                @Html.ValidationMessageFor(model => model.c_description, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group col-md-12 col-lg-6">
+                @Html.LabelFor(model => model.c_hours, new { @class = "form-label" })
+                @Html.TextBoxFor(model => model.c_hours, new { @class = "form-control", placeholder = "Enter course hours" })
+                @Html.ValidationMessageFor(model => model.c_hours, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Course Image -->
+            <div class="form-group col-md-12 col-lg-6">
+                @Html.LabelFor(model => model.c_image, new { @class = "form-label" })
+                @Html.TextBoxFor(model => model.ufile, new { type = "file", htmlAttributes = new { @class = "form-control" } })
+
+                @Html.ValidationMessageFor(model => model.ufile, "", new { @class = "text-danger" })
+            </div>
+
+            <!-- Course Rating -->
+            <div class="form-group col-md-12 col-lg-6">
+                @Html.LabelFor(model => model.c_rating, new { @class = "form-label" })
+                @Html.TextBoxFor(model => model.c_rating, new { @class = "form-control", placeholder = "Enter course rating (0-5)" })
+                @Html.ValidationMessageFor(model => model.c_rating, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="row">
+            <!-- Course Keyword -->
+            <div class="form-group col-md-12 col-lg-6">
+                @Html.LabelFor(model => model.c_keyword, new { @class = "form-label" })
+                @Html.TextBoxFor(model => model.c_keyword, new { @class = "form-control", placeholder = "Enter Keyword" })
+                @Html.ValidationMessageFor(model => model.c_keyword, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <!-- Submit Button -->
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Add Course</button>
+        </div>
+    }
+</div>
+
+<!-- Bootstrap CSS -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Bootstrap Icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+
+<!-- JavaScript to handle image selection -->
+
+

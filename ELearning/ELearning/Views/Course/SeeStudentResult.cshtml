@@ -1,0 +1,141 @@
+﻿@{
+    ViewBag.Title = "Student Progress";
+    var TotalQuestions = ViewBag.Total as Dictionary<int, int> ?? new Dictionary<int, int>();
+    var OBMarks = ViewBag.ObtainMarks as Dictionary<int, int> ?? new Dictionary<int, int>();
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        .progress-container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .student-info {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+
+            .table th, .table td {
+                padding: 12px;
+                text-align: center;
+                border: 1px solid #ddd;
+            }
+
+            .table th {
+                background-color: #007bff;
+                color: #fff;
+            }
+
+        .progress-summary {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 20px;
+        }
+
+        .progress-bar {
+            height: 20px;
+            background-color: #ddd;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+            .progress-bar div {
+                height: 100%;
+                background-color: #007bff;
+                text-align: center;
+                color: #fff;
+                font-weight: bold;
+                border-radius: 10px;
+            }
+
+        .grade {
+            font-size: 1.8rem;
+            color: #007bff;
+            text-align: center;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="progress-container">
+        <div class="progress-title">Student's Course Progress</div>
+
+        <div class="student-info">
+            <p><strong>Student Name:</strong> @ViewBag.Name</p>
+            <p><strong>Course Title:</strong> @ViewBag.CourseTitle</p>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Week</th>
+                    <th>Total Marks</th>
+                    <th>Obtained Marks</th>
+                    <th>Progress</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 1; i <= 16; i++)
+                {
+                    var progress = TotalQuestions[i] > 0 ? ((double)OBMarks[i] / TotalQuestions[i]) * 100 : 0;
+                    <tr>
+                        <td>Week @i</td>
+                        <td>@TotalQuestions[i]</td>
+                        <td>@OBMarks[i]</td>
+                        <td>
+                            <div class="progress-bar">
+                                <div style="width: @progress%;">@progress%</div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="progress-summary">
+            <p><strong>Total Marks:</strong> @ViewBag.TotalMarks</p>
+            <p><strong>Obtained Marks:</strong> @ViewBag.ObtainedMarks</p>
+            <p><strong>Percentage:</strong> @ViewBag.Percentage%</p>
+        </div>
+
+        <div class="grade">
+            Final Grade: @ViewBag.Grade
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,85 @@
+﻿@{
+    ViewBag.Title = "Admin Dashboard";
+}
+
+<div class="container mt-5">
+    <div class="row mb-4">
+        <div class="col-md-12 text-center">
+            <h1 class="display-4">Admin Dashboard</h1>
+        </div>
+    </div>
+
+
+
+    <div class="row justify-content-center">
+        <!-- Teachers Button -->
+        <div class="col-md-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body text-center">
+                    <h5 class="card-title"><i class="fas fa-chalkboard-teacher fa-2x"></i></h5>
+                    <p class="card-text">Teachers</p>
+                    <a href="@Url.Action("TeacherList", "Teacher")" class="btn btn-primary btn-block">Teachers</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Button -->
+        <div class="col-md-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body text-center">
+                    <h5 class="card-title">
+                        <i class="fas fa-user-graduate fa-2x"></i>
+                    </h5>
+                    <p class="card-text">Students</p>
+                    <a href="@Url.Action("StudentList", "Student")" class="btn btn-primary btn-block">Students</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <!-- Courses Button -->
+        <div class="col-md-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body text-center">
+                    <h5 class="card-title"><i class="fas fa-book fa-2x"></i></h5>
+                    <p class="card-text">Courses</p>
+                    <a href="@Url.Action("CourseList", "Course")" class="btn btn-primary btn-block">Courses</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Assign Course Button -->
+        <div class="col-md-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body text-center">
+                    <h5 class="card-title"><i class="fas fa-tasks fa-2x"></i></h5>
+                    <p class="card-text">Assign Courses to Teachers</p>
+                    <a href="@Url.Action("AssignCourseToTeacher", "Course")" class="btn btn-primary btn-block">Assign Course</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+<br>
+    <!-- Logout Button -->
+<div class="text-center mb-1">
+    <a class="btn btn-outline-danger" href="@Url.Action("Logout", "Teacher")">
+        Logout <i class="fas fa-sign-out-alt"></i>
+    </a>
+</div>
+
+    <!-- Include FontAwesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
+<style>
+    .btn-outline-danger {
+        border-width: 2px;
+        transition: all 0.3s ease;
+    }
+</style>
+
+    @*
+
+        @Session["aid"]
+        @Session["aname"]
+        @Session["apassword"]
+        @Session["aemial"]*@

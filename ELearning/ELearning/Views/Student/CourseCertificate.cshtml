@@ -1,0 +1,127 @@
+﻿@{
+    ViewBag.Title = "Course Certificate";
+    var TotalQuestions = ViewBag.Total as Dictionary<int, int> ?? new Dictionary<int, int>();
+    var OBMarks = ViewBag.ObtainMarks as Dictionary<int, int> ?? new Dictionary<int, int>();
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        .certificate-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 2px solid #007bff;
+            background-color: #fff;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .certificate-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .course-info {
+            font-size: 1.4rem;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .student-info {
+            font-size: 1.1rem;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+            .table th, .table td {
+                border: 1px solid #ccc;
+                padding: 8px;
+                text-align: center;
+            }
+
+            .table th {
+                background-color: #007bff;
+                color: #fff;
+            }
+
+        .result-summary {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .grade {
+            font-size: 2rem;
+            color: #007bff;
+            text-align: center;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-group mt-4">
+        <a href="@Url.Action("Dashboard", "Student")" class="btn btn-primary">
+            Go to Dashboard
+        </a>
+    </div>
+    <div class="certificate-container">
+        <div class="certificate-title">Course Completion Certificate</div>
+
+        <div class="course-info">
+            <p>Course Title: @ViewBag.CourseTitle</p>
+        </div>
+        <div class="student-info">
+            <p>Name: @Session["sname"]</p>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Week</th>
+                    <th>Total Marks</th>
+                    <th>Obtained Marks</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 1; i <= 16; i++)
+                {
+                    <tr>
+                        <td>Week @i</td>
+                        <td>@TotalQuestions[i]</td>
+                        <td>@OBMarks[i]</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="result-summary">
+            Total Marks: @ViewBag.TotalMarks <br />
+            Obtained Marks: @ViewBag.ObtainedMarks <br />
+            Percentage: @ViewBag.Percentage% <br />
+        </div>
+
+        <div class="grade">
+            Grade: @ViewBag.Grade
+        </div>
+    </div>
+
+</body>
+</html>
